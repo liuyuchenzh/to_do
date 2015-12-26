@@ -3,7 +3,10 @@
  * Author: Yuchen Liu
  * Version: 0.2
  * Liscence: None
- * Note: 1. Use angular's validation method instead of custom one.
+ * Note: 1. Use directive to validate instead of pure event handler
+ *       2. Drop fakeData in version 0.1 so more space saved
+ *       3. Next version will add a trash can feature so users can get things back
+ *       if they accidently remove the list.
  *
 **/
 
