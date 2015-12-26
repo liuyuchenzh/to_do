@@ -1,0 +1,48 @@
+.btn-close {
+	position: absolute;
+	display: block;
+	color: #333;
+	right: 5px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 2em;
+	height: 2em;
+	border-radius: 50%;
+	background-color: inherit;
+	font-weight: 700;
+	border: none;
+	outline: none;
+	&:hover {
+		background-color: #ccc;
+	}
+}
+
+header.panel-heading {
+	position: relative;
+}
+
+.btn-right {
+	position: absolute;
+	right: 5px;
+}
+
+.list-form {
+	padding: 10px;
+	margin: 5px 0;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+// more than one item needs to float to the right
+// original bootstrap does not provide a perfect support on this
+.yc-navbar-right {
+	float: right !important;
+	// margin-right is key here
+	margin-right: 0;
+}
+
+// for btn, add extra external space in vertical direction
+.yc-v-space-top {
+	margin-top: 10px;
+}
