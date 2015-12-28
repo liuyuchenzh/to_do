@@ -162,8 +162,6 @@
 		<!--------- form widget ends ---------->
 
 		<!--------- exisiting list ------------>
-
-
 		<form name="listForm" ng-submit="listCtrl.updateStorage(list)"
 		  ng-show="listCtrl.state.display"
 		  ng-model-options="{updateOn: 'submit', allowInvalid: true}"
@@ -251,6 +249,22 @@
 		<!--------- trash can ----------------->
 		<div ng-show="listCtrl.state.trashCanShow"
 		  ng-controller="trashCanController as trashCtrl">
+			<div class="yc-trash-list yc-select-all-container">
+				<div class="yc-trash-checkbox-container">
+					<label class="yc-trash-label">
+						<span class="glyphicon glyphicon-ok"
+						  ng-show="trashCtrl.state.all">
+						</span>
+						<input type="checkbox" class="yc-trash-checkbox"
+						  ng-model="trashCtrl.state.all"
+						  ng-change="trashCtrl.selectAll()">
+					</label>
+				</div>
+				<div class="yc-trash-checkbox-content yc-select-all-content">
+					<strong>All selected</strong>
+				</div>
+			</div>
+
 			<form name="trashForm" class="form-group form-inline"
 			  ng-repeat="list in trashCtrl.data.lists track by $index">
 				<div class="yc-trash-list">
@@ -259,7 +273,9 @@
 							<span class="glyphicon glyphicon-ok"
 							  ng-show="list.tChecked">
 							</span>
-							<input type="checkbox" class="yc-trash-checkbox" ng-model="list.tChecked">
+							<input type="checkbox" class="yc-trash-checkbox"
+							  ng-model="list.tChecked"
+								ng-change="trashCtrl.checkAll()">
 						</label>
 					</div>
 					<div class="yc-trash-checkbox-content">
@@ -274,7 +290,7 @@
 									{{list.taskDescr}}
 								</p>
 								<div>
-										{{list.taskDate.year}}-{{list.taskDate.month}}-{{list.taskDate.day}}
+									{{list.taskDate.year}}-{{list.taskDate.month}}-{{list.taskDate.day}}
 								</div>
 							</main>
 						</div>

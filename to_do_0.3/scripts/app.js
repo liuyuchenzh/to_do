@@ -62,6 +62,9 @@ angular.module("toDoList", [])
 
 	// begin event handler /manageList/
 	this.manageList = function () {
+    if (this.data.lists.length === 0) {
+      return;
+    }
     $scope.resetViewValue = false;
 		this.state.compiling = true;
     // save a copy of data
@@ -417,8 +420,43 @@ angular.module("toDoList", [])
     listKey: "__list"
   };
 
-  this.state = {};
+  this.state = {
+    all: false
+  };
 
+  //--------- local event handler ---------------------------------------
+  // begin event handler /selectAll/
+  this.selectAll = function() {
+    if (this.data.lists.length === 0) {
+      return;
+    }
+    var list;
+    var checked = this.state.all;
+    for (var i = 0, len = this.data.lists.length; i < len; i++) {
+      list = this.data.lists[i];
+      list.tChecked = checked;
+    }
+  }
+  // end event handler /selectAll/
+
+  // begin event handler /checkAll/
+  this.checkAll = function() {
+    var list;
+    var checked = true;
+    for (var i = 0, len = this.data.lists.length; i < len; i++) {
+      list = this.data.lists[i];
+      if (!list.tChecked) {
+        checked = false;
+        break;
+      }
+    }
+    if (checked) {
+      this.state.all = true;
+    } else {
+      this.state.all = false;
+    }
+  }
+  // end event handler /checkAll/
   //--------- global event handler --------------------------------------
   // begin event hanlder /updateTrash/
   function updateTrash(list) {
@@ -447,6 +485,7 @@ angular.module("toDoList", [])
         i++;
       }
     }
+    that.state.all = false;
   }
   // end event handler /removeTrash/
 
