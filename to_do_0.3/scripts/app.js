@@ -746,7 +746,7 @@ angular.module("toDoList", [])
     link: function(scope, elem, attrs, ctrl) {
       var ngModelOptions = attrs["year"];
       if (ngModelOptions === "true") {
-        autoCheck(elem, ctrl, "keyup", "year")
+        autoCheck(elem, ctrl, "keyup mouseup", "year")
       }
 
       ctrl.$validators.year = function(modelValue, viewValue) {
@@ -774,7 +774,7 @@ angular.module("toDoList", [])
     link: function(scope, elem, attrs, ctrl) {
       var ngModelOptions = attrs["month"];
       if (ngModelOptions === "true") {
-        autoCheck(elem, ctrl, "keyup", "month");
+        autoCheck(elem, ctrl, "keyup mouseup", "month");
       }
 
       ctrl.$validators.month = function(modelValue, viewValue) {
@@ -802,7 +802,7 @@ angular.module("toDoList", [])
     link: function(scope, elem, attrs, ctrl) {
       var ngModelOptions = attrs["day"];
       if (ngModelOptions === "true") {
-        autoCheck(elem, ctrl, "keyup", "day");
+        autoCheck(elem, ctrl, "keyup mouseup", "day");
       }
 
       ctrl.$validators.day = function(modelValue, viewValue) {
