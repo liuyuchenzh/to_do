@@ -152,6 +152,13 @@ angular.module("toDoList", [])
   }
   // end event hanlder /setAorD/
 
+  // begin event hanlder /restore/
+  this.restore = function() {
+    this.state.trashCanShow = false;
+    this.state.display = true;
+    gevent.fire("restore");
+  }
+
   // begin event hanlder /removeTrash/
   this.removeTrash = function() {
     this.state.trashCanShow = false;
@@ -485,11 +492,42 @@ angular.module("toDoList", [])
         i++;
       }
     }
-    that.state.all = false;
   }
   // end event handler /removeTrash/
 
+  // begin event handler /restore/
+  function restore() {
+    var i = 0;
+    var list;
+    while (that.data.lists[i] !== undefined) {
+      list = that.data.lists[i];
+      if (list.tChecked) {
+        that.data.lists.splice(i, 1);
+        removeListOnStorage(list.id, that.config.listKey);
+        // make sure the list won't be checked if it ends in trash can again
+        resetTchecked(list);
+        gevent.fire("updateList", list);
+      } else {
+        i++;
+      }
+    }
+  }
+  // end event handler /restore/
   //--------- end global event handler ----------------------------------
+
+  //--------- local utility function ------------------------------------
+  // begin /resetStateAll/
+  function resetStateAll() {
+    that.state.all = false;
+  }
+  // end /resetStateAll/
+
+  // begin /resetTchecked/
+  function resetTchecked(list) {
+    list.tChecked = undefined;
+  }
+  // end /resetTchecked/
+  //--------- end local utility function --------------------------------
 
   //--------- initiate controller ---------------------------------------
   (function() {
@@ -501,7 +539,8 @@ angular.module("toDoList", [])
     }
 
     gevent.subscribe("moveToTrash", updateTrash, updateTrashOnLS);
-    gevent.subscribe("removeTrash", removeTrash);
+    gevent.subscribe("removeTrash", removeTrash, resetStateAll);
+    gevent.subscribe("restore", restore, resetStateAll)
   }())
 }])
 

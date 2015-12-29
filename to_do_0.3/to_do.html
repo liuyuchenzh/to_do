@@ -33,7 +33,7 @@
 					<!-- manage -->
 					<li ng-show="listCtrl.state.display">
 						<a href="#" ng-click="listCtrl.manageList()">
-							<span class="glyphicon glyphicon-cog"></span>
+							<span class="glyphicon glyphicon-edit"></span>
 						</a>
 					</li>
 					<!-- end manage -->
@@ -93,6 +93,14 @@
 						</a>
 					</li>
 					<!-- end stop manage -->
+
+					<!-- restore -->
+					<li ng-show="listCtrl.state.trashCanShow">
+						<a href="#" ng-click="listCtrl.restore()">
+							<span class="glyphicon glyphicon-repeat"></span>
+						</a>
+					</li>
+					<!-- end restore -->
 
 					<!-- remove from trash can -->
 					<li ng-show="listCtrl.state.trashCanShow">
