@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html ng-app="toDoList">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta charset="utf-8">
+	<meta name="render" content="webkit">
+	<title>To-do list</title>
+
+	<!---------- 3rd party js -------------->
+	<script src="scripts/vendor/angular.min.js"></script>
+
+
+	<!---------- own js -------------------->
+	<script src="scripts/app.js"></script>
+
+	<!---------- 3rd party stylesheet ------>
+	<link rel="stylesheet" href="styles/vendor/bootstrap.min.css">
+
+	<!---------- own stylesheet ------------>
+	<link rel="stylesheet" href="styles/app.css">
+
+</head>
+
+<body ng-controller="listController as listCtrl">
+	<div class="app-wrapper col-lg-8">
+
+		<!--------- navbar -------------------->
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+
+				<ul class="nav navbar-nav">
+					<!-- manage -->
+					<li ng-show="listCtrl.state.display">
+						<a href="#" ng-click="listCtrl.manageList()">
+							<span class="glyphicon glyphicon-edit"></span>
+						</a>
+					</li>
+					<!-- end manage -->
+
+					<!-- list display -->
+					<li ng-show="listCtrl.state.trashCanShow">
+						<a href="#" ng-click="listCtrl.display()">
+							<span class="glyphicon glyphicon-th-list"></span>
+						</a>
+					</li>
+					<!-- end list display -->
+
+					<!-- trash can -->
+					<li ng-show="listCtrl.state.display">
+						<a href="#" ng-click="listCtrl.goToTrashCan()">
+							<span class="glyphicon glyphicon-trash"></span>
+						</a>
+					</li>
+					<!-- end trash can -->
+				</ul>
+
+				<!-- sort -->
+				<form class="navbar-form navbar-left"
+				  ng-show="listCtrl.state.display">
+					<div class="form-group">
+						<select class="form-control" name="sortMehod"
+						  ng-change="listCtrl.sortList()"
+							ng-model="listCtrl.state.sortMethod">
+							<option value="dateModified">Date Modified</option>
+							<option value="dateCreated">Date Created</option>
+							<option value="taskDate">Task Date</option>
+						</select>
+						<select class="form-control" name="aOrD"
+						  ng-change="listCtrl.setAorD()"
+							ng-model="listCtrl.state.aOrD">
+							<option value="a">Ascending</option>
+							<option value="d">Descending</option>
+						</select>
+					</div>
+				</form>
+				<!-- end sort -->
+
+
+				<ul class="nav navbar-nav yc-navbar-right">
+					<!-- add -->
+					<li ng-show="listCtrl.state.display && !listCtrl.state.compiling">
+						<a href="#" ng-click="listCtrl.formToggle()">
+							<span class="glyphicon glyphicon-plus"></span>
+						</a>
+					</li>
+					<!-- end add -->
+
+					<!-- stop manage -->
+					<li ng-show="listCtrl.state.compiling">
+						<a href="#" ng-click="listCtrl.stopManageList()">
+							<span class="glyphicon glyphicon-ok"></span>
+						</a>
+					</li>
+					<!-- end stop manage -->
+
+					<!-- restore -->
+					<li ng-show="listCtrl.state.trashCanShow">
+						<a href="#" ng-click="listCtrl.restore()">
+							<span class="glyphicon glyphicon-repeat"></span>
+						</a>
+					</li>
+					<!-- end restore -->
+
+					<!-- remove from trash can -->
+					<li ng-show="listCtrl.state.trashCanShow">
+						<a href="#" ng-click="listCtrl.removeTrash()">
+							<span class="glyphicon glyphicon-floppy-remove"></span>
+						</a>
+					</li>
+					<!-- end remove from trash can -->
+				</ul>
+			</div>
+		</nav>
+		<!--------- end navbar ---------------->
+
+		<!--------- form widget --------------->
+		<form class="list-form" name="formwidget" ng-show="listCtrl.state.formShow"
+		  ng-controller="formController as formCtrl"
+		  ng-submit="formCtrl.submit()">
+		  <fieldset>
+		    <div class="form-group" ng-class="{'has-error': ycDelayRequiredError}">
+		      <label for="taskName">Task: </label>
+		      <input type="text" class="form-control" name="name"
+		        ng-model="formCtrl.data.taskName" placeholder="Task Name"
+		        yc-delay-required>
+		    </div>
+		    <div class="form-group">
+		      <label for="taskDescr">Description: </label>
+		      <textarea class="form-control" name="descr"
+		        ng-model="formCtrl.data.taskDescr" placeholder="Task Description">
+		      </textarea>
+		    </div>
+		    <div class="form-group">
+		      <label>Date: </label>
+		      <div class="form-inline">
+		        <div class="input-group col-lg-4"
+		          ng-class="{'has-error': formwidget.year.$error.year}">
+		          <span class="input-group-addon">Year</span>
+		          <input type="number" class="form-control" name="year"
+		            ng-model="formCtrl.data.taskDate.year"
+		            year>
+		        </div>
+		        <div class="input-group col-lg-2"
+		          ng-class="{'has-error': formwidget.month.$error.month}">
+		          <span class="input-group-addon">Month</span>
+		          <input type="number" class="form-control" name="month"
+		            ng-model="formCtrl.data.taskDate.month"
+		            month>
+		        </div>
+		        <div class="input-group col-lg-2"
+		          ng-class="{'has-error': formwidget.day.$error.day}">
+		          <span class="input-group-addon">Day</span>
+		          <input type="number" class="form-control" name="day"
+		            ng-model="formCtrl.data.taskDate.day"
+		            day>
+		        </div>
+		      </div>
+		    </div>
+		    <button type="submit" class="btn btn-default" value="submit"
+		      ng-disabled="!formwidget.$valid">
+		      Done
+		    </button>
+		    <button type="button" class="btn btn-default" value="cancel"
+		      ng-click="formCtrl.clear()">
+		      Cancel
+		    </button>
+		  </fieldset>
+		</form>
+		<!--------- form widget ends ---------->
+
+		<!--------- exisiting list ------------>
+		<form name="listForm" ng-submit="listCtrl.updateStorage(list)"
+		  ng-show="listCtrl.state.display"
+		  ng-model-options="{updateOn: 'submit', allowInvalid: true}"
+		  ng-repeat="list in listData.lists track by $index">
+		  <div class="panel panel-default">
+		    <header class="panel-heading">
+		      <h3 class="panel-title" ng-show="!listCtrl.state.compiling">
+		        {{list.taskName}}
+		      </h3>
+		      <!-- compiling input -->
+		      <div class="form-group form-inline"
+		        ng-show="listCtrl.state.compiling">
+		        <input type="text" class="form-control" name="name"
+		          ng-model="list.taskName"
+		          ng-show="listCtrl.state.compiling" ng-disabled="!list.compiling"
+		          yc-required="true">
+		      </div>
+		      <!-- end compiling input -->
+		      <button type="button" class="btn-close" ng-show="listCtrl.state.compiling"
+		        ng-click="listCtrl.removeList(list.id)">
+		        <span class="glyphicon glyphicon-remove"></span>
+		      </button>
+		    </header>
+		    <main class="panel-body">
+		      <p ng-show="!listCtrl.state.compiling">
+						{{list.taskDescr}}
+					</p>
+		      <!-- compiling input -->
+		      <div class="form-group" ng-show="listCtrl.state.compiling">
+		        <textarea class="form-control" name="descr"
+		          ng-model="list.taskDescr"
+		          ng-disabled="!list.compiling"
+		          descr>
+		        </textarea>
+		      </div>
+		      <!-- end compiling input -->
+		      <div ng-show="!listCtrl.state.compiling">
+		          {{list.taskDate.year}}-{{list.taskDate.month}}-{{list.taskDate.day}}
+		      </div>
+		      <!-- compiling input -->
+		      <div class="form-inline" ng-show="listCtrl.state.compiling">
+		        <div class="input-group col-lg-4">
+		          <span class="input-group-addon">Year</span>
+		          <input type="number" class="form-control"
+		            name="year"
+		            ng-model="list.taskDate.year"
+		            ng-disabled="!list.compiling"
+		            year="true">
+		        </div>
+		        <div class="input-group col-lg-2">
+		          <span class="input-group-addon">Month</span>
+		          <input type="number" class="form-control"
+		            name="month"
+		            ng-model="list.taskDate.month"
+		            ng-disabled="!list.compiling"
+		            month="true">
+		        </div>
+		        <div class="input-group col-lg-2">
+		          <span class="input-group-addon">Day</span>
+		          <input type="number" class="form-control"
+		            name="day"
+		            ng-model="list.taskDate.day"
+		            ng-disabled="!list.compiling"
+		            day="true">
+		        </div>
+		      </div>
+		      <!-- end compiling input -->
+		      <div class="pull-right yc-v-space-top">
+		        <button type="submit" class="btn btn-default"
+		          ng-show="listCtrl.state.compiling"
+		          yc-disabled="{form: listForm, watch: list.disabled}">
+		          {{list.compiling ? "Save" : "Saved"}}
+		        </button>
+		        <button type="button" class="btn btn-default"
+		          ng-click="listCtrl.startEditList(list)"
+		          ng-show="!list.compiling">
+		          Edit
+		        </button>
+		      </div>
+		    </main>
+		  </div>
+		</form>
+		<!--------- existing list ends -------->
+
+		<!--------- trash can ----------------->
+		<div ng-show="listCtrl.state.trashCanShow"
+		  ng-controller="trashCanController as trashCtrl">
+			<div class="yc-trash-list yc-select-all-container">
+				<div class="yc-trash-checkbox-container">
+					<label class="yc-trash-label">
+						<span class="glyphicon glyphicon-ok"
+						  ng-show="trashCtrl.state.all">
+						</span>
+						<input type="checkbox" class="yc-trash-checkbox"
+						  ng-model="trashCtrl.state.all"
+						  ng-change="trashCtrl.selectAll()">
+					</label>
+				</div>
+				<div class="yc-trash-checkbox-content yc-select-all-content">
+					<strong>Select All</strong>
+				</div>
+			</div>
+
+			<form name="trashForm" class="form-group form-inline"
+			  ng-repeat="list in listData.trashLists track by $index">
+				<div class="yc-trash-list">
+					<div class="yc-trash-checkbox-container">
+						<label class="yc-trash-label">
+							<span class="glyphicon glyphicon-ok"
+							  ng-show="list.tChecked">
+							</span>
+							<input type="checkbox" class="yc-trash-checkbox"
+							  ng-model="list.tChecked"
+								ng-change="trashCtrl.checkAll()">
+						</label>
+					</div>
+					<div class="yc-trash-checkbox-content">
+						<div class="panel panel-default">
+							<header class="panel-heading">
+								<h3 class="panel-title">
+									{{list.taskName}}
+								</h3>
+							</header>
+							<main class="panel-body">
+								<p>
+									{{list.taskDescr}}
+								</p>
+								<div>
+									{{list.taskDate.year}}-{{list.taskDate.month}}-{{list.taskDate.day}}
+								</div>
+							</main>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!--------- trash can ends ------------>
+	</div>
+</body>
+
+</html>
