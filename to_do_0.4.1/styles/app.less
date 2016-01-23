@@ -1,0 +1,124 @@
+/* close btn for manage */
+.btn-close {
+	position: absolute;
+	display: block;
+	color: #333;
+	right: 5px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 2em;
+	height: 2em;
+	border-radius: 50%;
+	background-color: inherit;
+	font-weight: 700;
+	border: none;
+	outline: none;
+	&:hover {
+		background-color: #ccc;
+	}
+}
+/* end close btn for manage */
+
+/* list format */
+header.panel-heading {
+	position: relative;
+}
+/* end list format */
+
+/* navbar btn float to right custom */
+.btn-right {
+	position: absolute;
+	right: 5px;
+}
+/* end navbar btn float to right custom */
+
+/* outline for form widget */
+.list-form {
+	padding: 10px;
+	margin: 5px 0;
+	background-color: #eee;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+}
+/* end outline for form widget */
+
+// more than one item needs to float to the right
+// original bootstrap does not provide a perfect support on this
+.yc-navbar-right {
+	float: right !important;
+	// margin-right is key here
+	margin-right: 0;
+}
+
+// for btn, add extra external space in vertical direction
+.yc-v-space-top {
+	margin-top: 10px;
+}
+
+/* trash-can checkbox */
+.yc-checkbox {
+	position: absolute;
+	clip: rect(0,0,0,0);
+}
+
+.yc-label {
+	display: block;
+	height: 20px;
+	width: 20px;
+	border-radius: 5px;
+	background-color: #fff;
+	box-shadow: inset 0 0 2px #ccc;
+	text-indent: 1px;
+	// cancel effect of bootstrap
+	margin-bottom: 0;;
+}
+
+.yc-checkbox-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: #eee;
+	border-radius: 5px;
+	width: 10%;
+	margin-right: 2%;
+	padding: 5px 0;
+}
+
+.yc-checkbox-content {
+	width: 88%;
+	// cancel the margin-bottom of panel
+	margin-bottom: -20px;
+}
+
+.yc-list {
+	display: flex;
+}
+/* end trash-can checkbox */
+
+/* select-all block */
+.yc-select-all-container {
+	margin-bottom: 15px;
+}
+
+.yc-select-all-content {
+	font-size: 16px;
+	margin-bottom: 0;
+	display: flex;
+	align-items: center;
+	background-color: #eee;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 10px 15px;
+}
+
+.yc-select-all-content strong {
+	flex-grow: 1;
+}
+/* select-all block */
+
+/* disable remove btn */
+.yc-remove-disabled {
+	cursor: not-allowed;
+}
+/* disable remove btn */
