@@ -790,8 +790,9 @@ angular.module("toDoList", [])
   }
 }])
 .factory("createKey", function() {
+  var uniqueKey = Date.now();
   return function(str) {
-    return str + (Date.now() + Math.floor(Math.random() * 1000000));
+    return str + uniqueKey++;
   };
 })
 .directive("ycRequired", ["resetViewValue", "autoCheck", "gevent",
